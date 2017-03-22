@@ -6,4 +6,8 @@
   "scripts": {
     "start": "open client/index.html"
   },
+  "dependencies": {
+    "jQuery": "^1.7.4",
+    "underscore": "^1.8.3"
+  }
 }
