@@ -1,0 +1,13 @@
+
+//SAMPLES TO TEST
+
+//19UUA56602A801534
+//VIN Description: 2002 Acura TL
+//2HNYD28809H002590
+//VIN Description: 2009 Acura MDX
+// 5YJSA1DG9DFP14705
+//VIN Description: 2013 Tesla Model S
+//1FDCA14X0L0013299
+//VIN Description: 1990 Ford Aerostar
+//JF1ZNAA18D2706977
+//Make: TOYOTA || Model: SCION FR-S || Year: 2013

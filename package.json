@@ -1,0 +1,9 @@
+{
+  "name": "test",
+  "version": "1.0.1",
+  "description": "1",
+  "main": "client/index.html",
+  "scripts": {
+    "start": "open client/index.html"
+  },
+}
