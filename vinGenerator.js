@@ -1,8 +1,20 @@
+const GM = require('./GM.js');
+
+console.log('GM', GM)
+
 // VIN Position    Section Information
+
+//World Manufacture identifier
 // 1-2              WMI country code
 // 2-3              manufacturer
+
+//Vehicle descriptor section
 // 4-8              VDS equipment codes
+
+//Check Digit
 // 9                check digit
+
+//Vehicle Identifier Section
 // 10               VIS model year
 // 11               manufacturing plant
 // 12-17            serial number
@@ -13,7 +25,214 @@
 // 15-17            serial number
 
 
-// #1.                   VIN Character 1- 3 - Manufacturing Country Codes
+//API to use for decoding??
+//  url: "https://vpic.nhtsa.dot.gov/api/vehicles/GetModelsForMakeId/440?format=json",
+// The NHTSA Product Information Catalog Vehicle Listing (vPIC) Application Programming Interface (API) provides different ways to gather information on Vehicles and their specifications. The vPIC Dataset is populated using the information submitted by the Motor Vehicle manufacturers through the 565 submittals. All the information on how a VIN is assigned by the manufacturer is captured in this catalog and used to decode a VIN and extract vehicle information.
+
+// Decode VIN /vehicles/DecodeVin/5UXWX7C5*BA?format=xml&modelyear=2011
+
+// API Action
+// Decode VIN
+
+// /vehicles/DecodeVin/5UXWX7C5*BA?format=xml&modelyear=2011 XML JSV CSV JSON
+// The Decode VIN API will decode the VIN and the decoded output will be made available in the format of Key-value pairs. The IDs (VariableID and ValueID) represent the unique ID associated with the Variable/Value. In case of text variables, the ValueID is not applicable. Model Year in the request allows for the decoding to specifically be done in the current, or older (pre-1980), model year ranges. It is recommended to always send in the model year. This API also supports partial VIN decoding (VINs that are less than 17 characters). In this case, the VIN will be decoded partially with the available characters. In case of partial VINs, a "*" could be used to indicate the unavailable characters. The 9th digit is not necessary.
+
+
+// Decode VIN (flat format)
+
+// /vehicles/DecodeVinValues/5UXWX7C5*BA?format=xml&modelyear=2011 XML JSV CSV JSON
+// Less Information
+// The Decode VIN Flat Format API will decode the VIN and the decoded output will be made available in a flat file format. Model Year in the request allows for the decoding to specifically be done in the current, or older (pre-1980), model year ranges. It is recommended to always send in the model year. This API also supports partial VIN decoding (VINs that are less than 17 characters). In this case, the VIN will be decoded partially with the available characters. In case of partial VINs, a "*" could be used to indicate the unavailable characters.
+
+// Decode VIN Extended
+
+// /vehicles/DecodeVinExtended/5UXWX7C5*BA?format=jsv&modelyear=2011 XML JSV CSV JSON
+// Less Information
+// This is exactly like the Decode VIN method but provides additional information on variables related to other NHTSA programs like NCSA, Artemis etc.
+
+// Decode VIN Extended (flat format)
+
+// /vehicles/DecodeVinValuesExtended/5UXWX7C5*BA?format=jsv&modelyear=2011 XML JSV CSV JSON
+// Less Information
+// This is exactly like the Decode VIN (flat format) method but provides additional information on variables related to other NHTSA programs like NCSA, Artemis etc.
+
+// Decode WMI
+
+// /vehicles/DecodeWMI/1FD?format=xml XML JSV CSV JSON
+// Less Information
+// This provides information on the World Manufacturer Identifier for a specific WMI code. WMIs may be put in as either 3 characters representing VIN position 1-3 or 6 characters representing VIN positions 1-3 & 12-14. Example "JTD", "1T9131".
+
+// Decode SAE WMI
+
+// /vehicles/DecodeSAEWMI/109017?format=xml XML JSV CSV JSON
+// Less Information
+// This provides information on the World Manufacturer Identifier for a specific WMI code. WMIs may be put in as either 3 characters representing VIN position 1-3 or 6 characters representing VIN positions 1-3 & 12-14. Example "JTD", "1T9131".
+
+// Get WMIs for Manufacturer
+
+// /vehicles/GetWMIsForManufacturer/hon?format=xml XML JSV CSV JSON
+// Less Information
+// Provides information on the all World Manufacturer Identifier (WMI) for a specified Manufacturer. Only WMI registered in vPICList are displayed. For a list of all WMIs for a specified Manufacturer see GetSAEWMIsForManufacturer
+
+// Get SAE WMIs for Manufacturer
+
+// /vehicles/GetSAEWMIsForManufacturer/hon?format=xml XML JSV CSV JSON
+// Less Information
+// Provides information on the all World Manufacturer Identifier (WMI) for a specified Manufacturer. All WMI registered with SAE are displayed. For a list of WMIs registered with vPICList see GetWMIsForManufacturer
+
+
+// Get All Makes
+
+// /vehicles/GetAllMakes?format=csv XML JSV CSV JSON
+// Less Information
+// This provides a list of all the Makes available in vPIC Dataset.
+
+// Get All Manufacturers
+
+// /vehicles/GetAllManufacturers?format=csv&page=2 XML JSV CSV JSON
+// Less Information
+// This provides a list of all the Manufacturers available in vPIC Dataset. Results are provided in pages of 100 items, use parameter"page" to specify 1-st (default, 2nd, 3rd, ...Nth ... page.)
+
+// Get Manufacturer Details
+
+// /vehicles/GetManufacturerDetails/honda?format=xml XML JSV CSV JSON
+// Less Information
+// This provides the details for a specific manufacturer that is requested. This gives the results of all the manufacturers whose name is LIKE the manufacturer name. It accepts a partial manufacturer name as an input. Multiple results are returned in case of multiple matches.
+
+// Get Makes for Manufacturer by Manufacturer Name
+
+// /vehicles/GetMakesForManufacturer/honda?format=json XML JSV CSV JSON
+// Less Information
+// This returns all the Makes in the vPIC dataset for a specified manufacturer whose name is LIKE the manufacturer name in vPIC Dataset. Manufacturer name can be a partial name, or a full name for more specificity (e.g., "HONDA", "HONDA OF CANADA MFG., INC.", etc.)
+
+// Get Makes for Manufacturer by Manufacturer Name and Year
+
+// /vehicles/GetMakesForManufacturerAndYear/mer?year=2013&format=json XML JSV CSV JSON
+// Less Information
+// This returns all the Makes in the vPIC dataset for a specified manufacturer whose name is LIKE the manufacturer name in vPIC Dataset and whose Year From and Year To range cover the specified year Manufacturer name can be a partial name, or a full name for more specificity (e.g., "HONDA", "HONDA OF CANADA MFG., INC.", etc.)
+
+// Get Makes for Vehicle Type by Vehicle Type Name
+
+// /vehicles/GetMakesForVehicleType/car?format=json XML JSV CSV JSON
+// Less Information
+// This returns all the Makes in the vPIC dataset for a specified vehicle type whose name is LIKE the vehicle type name in vPIC Dataset.
+// Vehicle Type name can be a partial name, or a full name for more specificity (e.g., "Vehicle", "Moto", "Low Speed Vehicle", etc.)
+
+// Get Vehicle Types for Make by Name
+
+// /vehicles/GetVehicleTypesForMake/mercedes?format=json XML JSV CSV JSON
+// Less Information
+// This returns all the Vehicle Types in the vPIC dataset for a specified Make whose name is LIKE the make name in vPIC Dataset. Make name can be a partial name, or a full name for more specificity (e.g., "Merc", "Mercedes Benz", etc.)
+
+
+// Get Vehicle Types for Make by Id
+
+// /vehicles/GetVehicleTypesForMakeId/450?format=json XML JSV CSV JSON
+// Less Information
+// This returns all the Vehicle Types in the vPIC dataset for a specified Make whose ID equals the make ID in vPIC Dataset.
+
+
+// Get Equipment Plant Codes
+
+// /vehicles/GetEquipmentPlantCodes/2015?format=json XML JSV CSV JSON
+// Less Information
+// Returns assigned Equipment Plant Codes. Can be filtered by Year, Equipment Type and Report Type.
+
+// Year
+
+// 2016
+// Only years 2016 and above are supported
+// Equipment Type
+
+// 1
+// Tires
+// 3
+// Brake Hoses
+// 13
+// Glazing
+// 16
+// Retread
+// Report Type
+
+// New
+// The Equipment Plant Code was assigned during the selected year
+// Updated
+// The Equipment Plant data was modified during the selected year
+// Closed
+// The Equipment Plant is no longer Active
+// All
+// All Equipment Plant Codes regardless of year, including their status (active or closed)
+
+
+
+// Get Models for Make
+
+// /vehicles/GetModelsForMake/honda?format=json XML JSV CSV JSON
+// Less Information
+// This returns the Models in the vPIC dataset for a specified Make whose name is LIKE the Make in vPIC Dataset. Make can be a partial, or a full for more specificity (e.g., "Harley", "Harley Davidson", etc.)
+
+
+// Get Models for MakeId
+
+// /vehicles/GetModelsForMakeId/440?format=json XML JSV CSV JSON
+// Less Information
+// This returns the Models in the vPIC dataset for a specified Make whose Id is EQUAL the MakeId in vPIC Dataset.
+
+
+// Get Models for Make and a combination of Year and Vehicle Type
+
+// /vehicles/GetModelsForMakeYear/make/honda/modelyear/2015?format=csv
+// /vehicles/GetModelsForMakeYear/make/honda/vehicletype/truck?format=csv
+// /vehicles/GetModelsForMakeYear/make/honda/modelyear/2015/vehicletype/truck?format=csv XML JSV CSV JSON
+// XML JSV CSV JSON
+// XML JSV CSV JSON
+// Less Information
+// This returns the Models in the vPIC dataset for a specified year and Make whose name is LIKE the Make in vPIC Dataset.
+// Make can be a partial, or a full for more specificity (e.g., "Harley", "Harley Davidson", etc.)
+// ModelYear is integer (greater than 1995)
+// Vehicle Type name can be a partial name, or a full name for more specificity (e.g., "Vehicle", "Moto", "Low Speed Vehicle", etc.)
+
+
+// Get Models for Make Id and a combination of Year and Vehicle Type
+
+// /vehicles/GetModelsForMakeIdYear/makeId/474/modelyear/2015?format=csv
+// /vehicles/GetModelsForMakeIdYear/makeId/474/vehicletype/truck?format=csv
+// /vehicles/GetModelsForMakeIdYear/makeId/474/modelyear/2015/vehicletype/truck?format=csv XML JSV CSV JSON
+// XML JSV CSV JSON
+// XML JSV CSV JSON
+// Less Information
+// This returns the Models in the vPIC dataset for a specified year and Make whose Id is EQUAL the MakeId in vPIC Dataset.
+// MakeId is integer
+// ModelYear is integer (greater than 1995)
+// Vehicle Type name can be a partial name, or a full name for more specificity (e.g., "Vehicle", "Moto", "Low Speed Vehicle", etc.)
+
+
+// Get Vehicle Variables List
+
+// /vehicles/GetVehicleVariableList?format=xml XML JSV CSV JSON
+// Less Information
+// This provides a list of all the Vehicle related variables that are in vPIC dataset. Information on the name, description and the type of the variable is provided.
+
+
+// Get Vehicle Variable Values List
+
+// /vehicles/GetVehicleVariableValuesList/battery type?format=jsv XML JSV CSV JSON
+// Less Information
+// This provides a list of all the accepted values for a given variable that are stored in vPIC dataset. This applies to only "Look up" type of variables.
+
+
+
+
+
+
+
+
+
+
+
+
+
+// #1                  VIN Character 1- 3 - Manufacturing Country Codes
 // 1 or 4,5          2           3           J           K           S           W           Z                 Y
 // USA             Canada      Mexico      Japan       Korea       England     Germany     Italy            Sweden/Findland
 
@@ -83,7 +302,7 @@
 // JS  Suzuki
 // JT  Toyota
 // JY  Yamaha (motorcycles)
-// KL  Daewoo General Motors South Korea
+                                    // KL  Daewoo General Motors South Korea
 // KM  Hyundai
 // KMY Daelim (motorcycles)
 // KM1 Hyosung (motorcycles)
@@ -123,7 +342,7 @@
 // LL8 Linhai (ATV)
 // LMC Suzuki Hong Kong (motorcycles)
 // LPR Yamaha Hong Kong (motorcycles)
-// LSG Shanghai General Motors, China
+                                                        // LSG Shanghai General Motors, China
 // LSJ MG Motor UK Limited - SAIC Motor, Shanghai, China
 // LSV Shanghai Volkswagen, China
 // LSY Brilliance Zhonghua
@@ -207,7 +426,7 @@
 // SCE DeLorean Motor Cars N. Ireland (UK)
 // SCF Aston
 // SDB Peugeot UK (formerly Talbot)
-// SED General Motors Luton Plant
+                                    // SED General Motors Luton Plant
 // SEY LDV
 // SFA Ford UK
 // SFD Alexander Dennis UK
@@ -307,8 +526,8 @@
 // XMC Mitsubishi (NedCar)
 // XTA Lada/AutoVaz (Russia)
 // XTT UAZ/Sollers (Russia)
-// XUF General Motors Russia
-// XUU AvtoTor (Russia, General Motors SKD)
+                                            // XUF General Motors Russia
+                                            // XUU AvtoTor (Russia, General Motors SKD)
 // XW8 Volkswagen Group Russia
 // XWB UZ-Daewoo (Uzbekistan)
 // XWE AvtoTor (Russia, Hyundai-Kia SKD)
@@ -366,17 +585,17 @@
 // 1FU Freightliner
 // 1FV Freightliner
 // 1F9 FWD Corp.
-// 1G  General Motors USA
-// 1GC Chevrolet Truck USA
-// 1GT GMC Truck USA
-// 1G1 Chevrolet USA
-// 1G2 Pontiac USA
-// 1G3 Oldsmobile USA
-// 1G4 Buick USA
-// 1G6 Cadillac USA
-// 1G8 Saturn USA
-// 1GM Pontiac USA
-// 1GY Cadillac USA
+                                // 1G  General Motors USA
+                                // 1GC Chevrolet Truck USA
+                                // 1GT GMC Truck USA
+                                // 1G1 Chevrolet USA
+                                // 1G2 Pontiac USA
+                                // 1G3 Oldsmobile USA
+                                // 1G4 Buick USA
+                                // 1G6 Cadillac USA
+                                // 1G8 Saturn USA
+                                // 1GM Pontiac USA
+                                // 1GY Cadillac USA
 // 1H  Honda USA
 // 1HD Harley-Davidson
 // 1J4 Jeep
@@ -410,11 +629,11 @@
 // 2FU Freightliner
 // 2FV Freightliner
 // 2FZ Sterling
-// 2G  General Motors Canada
-// 2G1 Chevrolet Canada
-// 2G2 Pontiac Canada
-// 2G3 Oldsmobile Canada
-// 2G4 Buick Canada
+                            // 2G  General Motors Canada
+                            // 2G1 Chevrolet Canada
+                            // 2G2 Pontiac Canada
+                            // 2G3 Oldsmobile Canada
+                            // 2G4 Buick Canada
 // 2HG Honda Canada
 // 2HK Honda Canada
 // 2HJ Honda Canada
@@ -432,7 +651,7 @@
 // 3D3 Dodge Mexico
 // 3FA Ford Motor Company Mexico
 // 3FE Ford Motor Company Mexico
-// 3G  General Motors Mexico
+                                    // 3G  General Motors Mexico
 // 3H  Honda Mexico
 // 3JB BRP Mexico (all-terrain vehicles)
 // 3MZ Mazda Mexico
@@ -469,9 +688,9 @@
 // 6F4 Nissan Motor Company Australia
 // 6F5 Kenworth Australia
 // 6FP Ford Motor Company Australia
-// 6G1 General Motors-Holden (post Nov 2002)
-// 6G2 Pontiac Australia (GTO & G8)
-// 6H8 General Motors-Holden (pre Nov 2002)
+                                        // 6G1 General Motors-Holden (post Nov 2002)
+                                        // 6G2 Pontiac Australia (GTO & G8)
+                                        // 6H8 General Motors-Holden (pre Nov 2002)
 // 6MM Mitsubishi Motors Australia
 // 6T1 Toyota Motor Corporation Australia
 // 6U9 Privately Imported car in Australia
@@ -627,7 +846,7 @@
 // First + Second + Third Position Digits  - WMI   Vehicle Manufacturer
 // 10T Oshkosh
 // 11V Ottawa
-// 137 AM General, Hummer
+                        // 137 AM General, Hummer
 // 15G Gillig
 // 17N John Deere
 // 18X WRV
@@ -666,27 +885,27 @@
 // 1FT Ford
 // 1FU Freightliner
 // 1FV Freightliner
-// 1G1 Chevrolet
-// 1G2 Pontiac
-// 1G3 Oldsmobile
-// 1G4 Buick
-// 1G5 GMC, Pontiac
-// 1G6 Cadillac
-// 1G8 Chevrolet, Saturn
-// 1GA Chevrolet
-// 1GB Chevrolet
-// 1GC Chevrolet
-// 1GD GMC
-// 1GE Cadillac
+                            // 1G1 Chevrolet
+                            // 1G2 Pontiac
+                            // 1G3 Oldsmobile
+                            // 1G4 Buick
+                            // 1G5 GMC, Pontiac
+                            // 1G6 Cadillac
+                            // 1G8 Chevrolet, Saturn
+                            // 1GA Chevrolet
+                            // 1GB Chevrolet
+                            // 1GC Chevrolet
+                            // 1GD GMC
+                            // 1GE Cadillac
 // 1GF Flexible
 // 1GG Isuzu
-// 1GH GMC, Oldsmobile
-// 1GJ GMC
-// 1GK GMC
-// 1GM Pontiac
-// 1GN Chevrolet
-// 1GT GMC
-// 1GY Cadillac
+                            // 1GH GMC, Oldsmobile
+                            // 1GJ GMC
+                            // 1GK GMC
+                            // 1GM Pontiac
+                            // 1GN Chevrolet
+                            // 1GT GMC
+                            // 1GY Cadillac
 // 1HG Honda
 // 1HS International
 // 1HT International
@@ -747,15 +966,15 @@
 // 2B7 Dodge
 // 2B8 Dodge
 // 2BC AMC, Jeep
-// 2C1 Chevrolet, Geo
-// 2C3 Chrysler
-// 2C4 Chrysler
-// 2C7 Pontiac
-// 2C8 Chrysler
-// 2CC AMC, Eagle
-// 2CK Geo, Pontiac
+                            // 2C1 Chevrolet, Geo
+                            // 2C3 Chrysler
+                            // 2C4 Chrysler
+                            // 2C7 Pontiac
+                            // 2C8 Chrysler
+                            // 2CC AMC, Eagle
+                            // 2CK Geo, Pontiac
 // 2CM AMC
-// 2CN Chevrolet, Geo
+                            // 2CN Chevrolet, Geo
 // 2D4 Dodge
 // 2D6 Dodge
 // 2D7 Dodge
@@ -769,21 +988,21 @@
 // 2FV Freightliner
 // 2FW Sterling
 // 2FZ Sterling
-// 2G0 GMC
-// 2G1 Chevrolet
-// 2G2 Pontiac
-// 2G3 Oldsmobile
-// 2G4 BuickX
-// 2G5 GMC
-// 2G7 Pontiac
-// 2G8 Chevrolet
-// 2GA Chevrolet
-// 2GB Chevrolet
-// 2GD GMC
-// 2GJ GMC
-// 2GK GMC
-// 2GN Chevrolet
-// 2GT GMC
+                        // 2G0 GMC
+                        // 2G1 Chevrolet
+                        // 2G2 Pontiac
+                        // 2G3 Oldsmobile
+                        // 2G4 BuickX
+                        // 2G5 GMC
+                        // 2G7 Pontiac
+                        // 2G8 Chevrolet
+                        // 2GA Chevrolet
+                        // 2GB Chevrolet
+                        // 2GD GMC
+                        // 2GJ GMC
+                        // 2GK GMC
+                        // 2GN Chevrolet
+                        // 2GT GMC
 // 2HG Honda
 // 2HH Acura
 // 2HJ Honda
@@ -838,19 +1057,19 @@
 // 3FE Ford, Freightliner
 // 3FR Ford
 // 3FT Ford
-// 3G1 Chevrolet
-// 3G2 Pontiac
-// 3G4 Buick
-// 3G5 Buick
-// 3G7 Pontiac
-// 3GB Chevrolet
-// 3GC Chevrolet
-// 3GD GMC
-// 3GE Chevrolet
-// 3GK GMC
-// 3GN Chevrolet
-// 3GT GMC
-// 3GY Cadillac
+                        // 3G1 Chevrolet
+                        // 3G2 Pontiac
+                        // 3G4 Buick
+                        // 3G5 Buick
+                        // 3G7 Pontiac
+                        // 3GB Chevrolet
+                        // 3GC Chevrolet
+                        // 3GD GMC
+                        // 3GE Chevrolet
+                        // 3GK GMC
+                        // 3GN Chevrolet
+                        // 3GT GMC
+                        // 3GY Cadillac
 // 3HA International
 // 3HG Honda
 // 3HM Honda
@@ -878,8 +1097,8 @@
 // 4E3 Eagle
 // 4F2 Mazda
 // 4F4 Mazda
-// 4G1 Chevrolet
-// 4G2 Pontiac
+                                    // 4G1 Chevrolet
+                                    // 4G2 Pontiac
 // 4GD GMC
 // 4GT Isuzu, WhiteGMC
 // 4JG Mercedes-Benz
@@ -918,10 +1137,10 @@
 // 5CK Western Star Trucks
 // 5FN Honda
 // 5FY New Flyer
-// 5GA Buick
+                                // 5GA Buick
 // 5GR Hummer
 // 5GT Hummer
-// 5GZ Saturn
+                                // 5GZ Saturn
 // 5J6 Honda
 // 5J8 Acura
 // 5KJ Western Star Trucks
@@ -942,8 +1161,8 @@
 // 5TF Toyota
 // 5UM BMW
 // 5UX BMW
-// 5Y2 Pontiac
-// 6G2 Pontiac
+                        // 5Y2 Pontiac
+                        // 6G2 Pontiac
 // 6MM Mitsubishi
 // 6MP Mercury
 // 9BF Ford
@@ -973,9 +1192,9 @@
 // JF2 Subaru
 // JF3 Subaru
 // JF4 Saab
-// JG1 Chevrolet, Geo
-// JG7 Pontiac
-// JGC Geo
+                            // JG1 Chevrolet, Geo
+                            // JG7 Pontiac
+                            // JGC Geo
 // JH4 Acura
 // JHB Hino
 // JHL Honda
@@ -1018,8 +1237,8 @@
 // JTN Toyota
 // JW6 Mitsubishi
 // JW7 Mitsubishi
-// KL1 Chevrolet
-// KL2 Pontiac
+                        // KL1 Chevrolet
+                        // KL2 Pontiac
 // KL5 Suzuki
 // KL7 Asuna
 // KLA Daewoo
@@ -1052,7 +1271,7 @@
 // VF3 Peugeot
 // VG6 Mack
 // VSS Seat
-// W06 Cadillac
+                                // W06 Cadillac
 // WA1 Audi
 // WAU Audi
 // WBA BMW
